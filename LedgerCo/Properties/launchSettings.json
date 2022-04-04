@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LedgerCo": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\Study Material\\Dot Net\\Projects\\LedgerCo\\SampleData\\Command-2.txt\""
+    }
+  }
+}

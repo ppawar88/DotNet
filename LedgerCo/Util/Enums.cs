@@ -13,15 +13,16 @@ namespace LedgerCo.Util
         Balance
     }
 
-    public enum InputType
-    {
-        File
-        //SingleCommand, //Can be used to pass one-one command using readline
-    }
-
     public enum DataSource
     {
         InMemory
         // OutOfMemmory // can be use for any other relational / non relational data source 
     }
+
+    public enum OutputType
+    {
+        Console
+        //Other output options like Write to file.
+    }
+
 }

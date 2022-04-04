@@ -8,13 +8,19 @@ namespace LedgerCo.Models
 {
     public class Loan
     {
+        public Loan()
+        {
+            Bank = new Bank();
+            Borrower = new Borrower();
+            Payments = new List<Payment>();
+        }
+
         public Bank Bank { get; set; }
         public Borrower Borrower { get; set; }
         public decimal PrincipalAmount { get; set; }
-        public decimal BalanceAmount { get; set; }
         public int LoanTenureInYear { get; set; }
         public decimal IntRate { get; set; }
-        public List<Payment> Paymets { get; set; }
+        public List<Payment> Payments { get; set; }
 
         public int LoanTenureInMonth
         {
@@ -28,7 +34,7 @@ namespace LedgerCo.Models
         {
             get
             {
-                return PrincipalAmount * LoanTenureInYear * IntRate;
+                return PrincipalAmount * LoanTenureInYear * IntRate / 100;
             }
         }
 
@@ -36,8 +42,17 @@ namespace LedgerCo.Models
         {
             get
             {
-                return PrincipalAmount + InterestPayable;
+                return Math.Ceiling(PrincipalAmount + InterestPayable);
             }
         }
+
+        public decimal EmiAmount
+        {
+            get
+            {
+                return Math.Ceiling(LoanPayableAmount / LoanTenureInMonth);
+            }
+        }
+
     }
 }

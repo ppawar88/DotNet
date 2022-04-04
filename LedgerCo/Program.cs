@@ -6,7 +6,8 @@ namespace LedgerCo
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            MarketPlace marketPlace = new MarketPlace();
+            marketPlace.StartMarketPlace(args);
         }
     }
 }
