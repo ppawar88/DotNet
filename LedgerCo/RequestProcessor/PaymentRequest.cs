@@ -1,15 +1,10 @@
 ﻿using LedgerCo.Models;
 using LedgerCo.Repository;
-using LedgerCo.ResponseProcessor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LedgerCo.RequestProcessor
 {
-    internal class PaymentRequest : IRequest<Request>
+    public class PaymentRequest : IRequest<Request>
     {
         private IDataRepository _dataRepository;
 
@@ -23,11 +18,9 @@ namespace LedgerCo.RequestProcessor
             Request req = null;
 
             if (ValidRequest(command, out req))
-                this._dataRepository.ProcessPayment(req.Loan);
+                return this._dataRepository.ProcessPayment(req.Loan);
             else
                 throw new Exception("Invalid Payment Command");
-
-            return true;
         }
 
         public bool ValidRequest(string command, out Request req)

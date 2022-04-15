@@ -2,17 +2,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LedgerCo.Repository
 {
-    public class InMemoryDataSource : IDataRepository
+    public sealed class InMemoryDataSource : IDataRepository
     {
         //InMemory Data
-        private static readonly List<Loan> _loanLedgerDetail = new List<Loan>();
+        private readonly List<Loan> _loanLedgerDetail = new List<Loan>();
 
-        private IEnumerable<Loan> CheckForValidLoanAccount(string bankName, string borrowerName)
+        private static InMemoryDataSource _objInMemoryDataSource;
+
+        static object _lock = new object();
+        private InMemoryDataSource() { }
+
+        public static InMemoryDataSource Instance
+        {
+            get
+            {
+                if (_objInMemoryDataSource != null)
+                    return _objInMemoryDataSource;
+
+                lock (_lock)
+                {
+                    if (_objInMemoryDataSource == null)
+                        _objInMemoryDataSource = new InMemoryDataSource();
+
+                    return _objInMemoryDataSource;
+                }
+            }
+        }
+        public IEnumerable<Loan> CheckForValidLoanAccount(string bankName, string borrowerName)
         {
             var loanDetails = _loanLedgerDetail.Where(l => l.Bank.Name == bankName
                                             && l.Borrower.Name == borrowerName);
@@ -37,21 +56,22 @@ namespace LedgerCo.Repository
 
             decimal balanceAmout = loanDetail.LoanPayableAmount - totalLumsumPayment - emiPayment;
 
-            balance.RepaymentAmount = Math.Max(totalLumsumPayment + emiPayment, 0);
+            balance.RepaymentAmount = Math.Max(Math.Min(totalLumsumPayment + emiPayment, loanDetail.LoanPayableAmount), 0);
             balance.PendingEMICount = Convert.ToInt32(Math.Ceiling(balanceAmout > 0 ? balanceAmout / loanDetail.EmiAmount : 0));
 
             return balance;
         }
 
-        public void ProcessLoan(Loan loan)
+        public bool ProcessLoan(Loan loan)
         {
             if (CheckForValidLoanAccount(loan.Bank.Name, loan.Borrower.Name).Any())
                 throw new Exception("Duplicate loan entry");
 
             _loanLedgerDetail.Add(loan);
+            return true;
         }
 
-        public void ProcessPayment(Loan loan)
+        public bool ProcessPayment(Loan loan)
         {
             var loanDetail = CheckForValidLoanAccount(loan.Bank.Name, loan.Borrower.Name).FirstOrDefault();
 
@@ -59,6 +79,7 @@ namespace LedgerCo.Repository
                 throw new Exception("Loan detail not found for payment");
 
             loanDetail.Payments.Add(loan.Payments.FirstOrDefault());
+            return true;
         }
     }
 }

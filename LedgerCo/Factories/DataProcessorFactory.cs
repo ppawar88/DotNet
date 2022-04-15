@@ -1,10 +1,5 @@
 ﻿using LedgerCo.Repository;
 using LedgerCo.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LedgerCo.Factories
 {
@@ -17,7 +12,7 @@ namespace LedgerCo.Factories
             switch (dataSource)
             {
                 case DataSource.InMemory:
-                    dataRepository = new InMemoryDataSource();
+                    dataRepository = InMemoryDataSource.Instance;
                     break;
                 //Can add more data repository such as SQL or Oracle
             }

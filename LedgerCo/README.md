@@ -1,2 +1,0 @@
-# DotNet
-Dot Net Projects

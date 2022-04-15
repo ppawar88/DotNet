@@ -2,14 +2,10 @@
 using LedgerCo.Repository;
 using LedgerCo.ResponseProcessor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LedgerCo.RequestProcessor
 {
-    internal class BalanceRequest : IRequest<Request>
+    public class BalanceRequest : IRequest<Request>
     {
         private IDataRepository _dataRepository;
         public IResponse _response;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LedgerCo
+﻿namespace LedgerCo
 {
     internal class Program
     {
